@@ -12,7 +12,7 @@ Existing libraries:
 Other algorithms:
 * [q_compress](https://crates.io/crates/q_compress) - alternative XOR encoding codec. This ahieves a higher compression rate against gzip, snappy, and zstd. Post [here](https://www.reddit.com/r/rust/comments/surtee/q_compress_07_still_has_35_higher_compression/)
 * [compressed_vec](https://docs.rs/compressed_vec/latest/compressed_vec/) compresses data and allows processing directly on the compressed representation
-* [fpzip](https://computing.llnl.gov/projects/fpzip)
+* [fpzip](https://computing.llnl.gov/projects/fpzip) - memory-efficient algorithm from 2006
 
 To determine the (approximately) best approach to encode floating point numbers, we record the following evaluation measures:
 - Encoding speed
