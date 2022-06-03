@@ -26,5 +26,5 @@ We will evaluate on two types of datasets pulled from Sisu's dataframes:
 We will compare the following compression libraries:
 - [gibbon](https://docs.rs/gibbon/0.1.3/gibbon/)
 - [tsz](https://docs.rs/tsz/0.1.0/tsz/) <- Rust's gorilla library
-- [compressed_vec](https://docs.rs/compressed_vec/latest/compressed_vec/)
+- [compressed_vec](https://docs.rs/compressed_vec/latest/compressed_vec/) (an updated version does not exist, skip for now until a new maintainer is found)
 - [q_compress](https://crates.io/crates/q_compress)
