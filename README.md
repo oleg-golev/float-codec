@@ -7,10 +7,12 @@ Tested algorithms:
 * [Facebook's zstd](https://docs.rs/zstd/latest/zstd/)
 
 To Explore:
+* [zfp](https://crates.io/crates/zfp-sys)
+* [snap](https://lib.rs/crates/snap)
 * [compressed_vec](https://docs.rs/compressed_vec/latest/compressed_vec/) compresses data and allows processing directly on the compressed representation
 * [fpzip](https://computing.llnl.gov/projects/fpzip) - memory-efficient algorithm from 2006
 * [gibbon](https://docs.rs/gibbon/0.1.3/gibbon/)
-* [zfp](https://crates.io/crates/zfp-sys)
+* [fpzip](https://computing.llnl.gov/projects/fpzip)
 
 To determine the (approximately) best approach to encode floating point numbers, we record the following evaluation measures:
 - Compression ratio (old file size / new file size)
