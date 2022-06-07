@@ -1,5 +1,5 @@
 # float-codec
-Compares different Rust compression algorithms. The best is to be used in the company FloatBuilder and Page implementations for compression of floating-point values.
+Compares different compression algorithms on floating point numbers.
 
 Tested algorithms:
 * [Facebook Gorilla](https://github.com/jeromefroe/tsz-rs)
