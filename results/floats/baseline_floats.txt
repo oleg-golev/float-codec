@@ -1,0 +1,3 @@
+Encoding speed: 137.170524ms
+Decoding speed: 11.813498ms
+

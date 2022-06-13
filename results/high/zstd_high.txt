@@ -1,0 +1,610 @@
+Compression level: -99
+Compression ratio: 0.9995532390171258
+Encoding speed: 182.354µs
+Decoding speed: 50.538µs
+
+Compression level: -98
+Compression ratio: 0.9995532390171258
+Encoding speed: 33.268µs
+Decoding speed: 27.918µs
+
+Compression level: -97
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.603µs
+Decoding speed: 22.163µs
+
+Compression level: -96
+Compression ratio: 0.9995532390171258
+Encoding speed: 37.682µs
+Decoding speed: 22.311µs
+
+Compression level: -95
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.049µs
+Decoding speed: 21.954µs
+
+Compression level: -94
+Compression ratio: 0.9995532390171258
+Encoding speed: 25.3µs
+Decoding speed: 21.176µs
+
+Compression level: -93
+Compression ratio: 0.9995532390171258
+Encoding speed: 22.895µs
+Decoding speed: 21.671µs
+
+Compression level: -92
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.044µs
+Decoding speed: 21.495µs
+
+Compression level: -91
+Compression ratio: 0.9995532390171258
+Encoding speed: 22.854µs
+Decoding speed: 20.988µs
+
+Compression level: -90
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.378µs
+Decoding speed: 21.387µs
+
+Compression level: -89
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.24µs
+Decoding speed: 21.14µs
+
+Compression level: -88
+Compression ratio: 1.0177921552769915
+Encoding speed: 25.957µs
+Decoding speed: 33.848µs
+
+Compression level: -87
+Compression ratio: 0.9995532390171258
+Encoding speed: 32.253µs
+Decoding speed: 21.636µs
+
+Compression level: -86
+Compression ratio: 0.9995532390171258
+Encoding speed: 22.682µs
+Decoding speed: 21.154µs
+
+Compression level: -85
+Compression ratio: 0.9995532390171258
+Encoding speed: 22.644µs
+Decoding speed: 21.1µs
+
+Compression level: -84
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.491µs
+Decoding speed: 21.018µs
+
+Compression level: -83
+Compression ratio: 0.9995532390171258
+Encoding speed: 22.652µs
+Decoding speed: 20.945µs
+
+Compression level: -82
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.897µs
+Decoding speed: 21.057µs
+
+Compression level: -81
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.769µs
+Decoding speed: 20.9µs
+
+Compression level: -80
+Compression ratio: 1.027242118151209
+Encoding speed: 27.738µs
+Decoding speed: 24.778µs
+
+Compression level: -79
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.786µs
+Decoding speed: 21.523µs
+
+Compression level: -78
+Compression ratio: 0.9995532390171258
+Encoding speed: 22.777µs
+Decoding speed: 45.999µs
+
+Compression level: -77
+Compression ratio: 0.9995532390171258
+Encoding speed: 29.042µs
+Decoding speed: 23.997µs
+
+Compression level: -76
+Compression ratio: 0.9995532390171258
+Encoding speed: 25.426µs
+Decoding speed: 21.512µs
+
+Compression level: -75
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.574µs
+Decoding speed: 21.468µs
+
+Compression level: -74
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.268µs
+Decoding speed: 21.453µs
+
+Compression level: -73
+Compression ratio: 1.0198024816409217
+Encoding speed: 26.905µs
+Decoding speed: 25.337µs
+
+Compression level: -72
+Compression ratio: 1.028133775848864
+Encoding speed: 29.165µs
+Decoding speed: 24.926µs
+
+Compression level: -71
+Compression ratio: 0.9995532390171258
+Encoding speed: 35.116µs
+Decoding speed: 21.638µs
+
+Compression level: -70
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.391µs
+Decoding speed: 21.604µs
+
+Compression level: -69
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.971µs
+Decoding speed: 21.619µs
+
+Compression level: -68
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.754µs
+Decoding speed: 21.34µs
+
+Compression level: -67
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.382µs
+Decoding speed: 21.865µs
+
+Compression level: -66
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.589µs
+Decoding speed: 21.404µs
+
+Compression level: -65
+Compression ratio: 1.025254582484725
+Encoding speed: 27.663µs
+Decoding speed: 25.028µs
+
+Compression level: -64
+Compression ratio: 1.0367090562734902
+Encoding speed: 29.668µs
+Decoding speed: 25.917µs
+
+Compression level: -63
+Compression ratio: 1.0157897391918478
+Encoding speed: 26.447µs
+Decoding speed: 24.485µs
+
+Compression level: -62
+Compression ratio: 0.9995532390171258
+Encoding speed: 23.93µs
+Decoding speed: 22µs
+
+Compression level: -61
+Compression ratio: 0.9995532390171258
+Encoding speed: 25.858µs
+Decoding speed: 21.28µs
+
+Compression level: -60
+Compression ratio: 1.0171751869064458
+Encoding speed: 26.581µs
+Decoding speed: 24.31µs
+
+Compression level: -59
+Compression ratio: 0.9995532390171258
+Encoding speed: 26.232µs
+Decoding speed: 35.829µs
+
+Compression level: -58
+Compression ratio: 0.9995532390171258
+Encoding speed: 25.544µs
+Decoding speed: 21.023µs
+
+Compression level: -57
+Compression ratio: 1.0205778003041055
+Encoding speed: 26.365µs
+Decoding speed: 24.108µs
+
+Compression level: -56
+Compression ratio: 1.0496246872393662
+Encoding speed: 35.36µs
+Decoding speed: 25.264µs
+
+Compression level: -55
+Compression ratio: 1.0175349941886906
+Encoding speed: 26.728µs
+Decoding speed: 23.947µs
+
+Compression level: -54
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.247µs
+Decoding speed: 20.917µs
+
+Compression level: -53
+Compression ratio: 0.9995532390171258
+Encoding speed: 25.697µs
+Decoding speed: 21.253µs
+
+Compression level: -52
+Compression ratio: 1.016969696969697
+Encoding speed: 25.703µs
+Decoding speed: 23.681µs
+
+Compression level: -51
+Compression ratio: 0.9995532390171258
+Encoding speed: 25.862µs
+Decoding speed: 21.661µs
+
+Compression level: -50
+Compression ratio: 1.0166616176916086
+Encoding speed: 26.58µs
+Decoding speed: 23.887µs
+
+Compression level: -49
+Compression ratio: 1.0394920241598264
+Encoding speed: 29.227µs
+Decoding speed: 24.812µs
+
+Compression level: -48
+Compression ratio: 1.0516530004700475
+Encoding speed: 30.75µs
+Decoding speed: 24.851µs
+
+Compression level: -47
+Compression ratio: 1.0212506973677538
+Encoding speed: 27.272µs
+Decoding speed: 24.161µs
+
+Compression level: -46
+Compression ratio: 0.9995532390171258
+Encoding speed: 24.791µs
+Decoding speed: 21.381µs
+
+Compression level: -45
+Compression ratio: 0.9995532390171258
+Encoding speed: 26.371µs
+Decoding speed: 21.471µs
+
+Compression level: -44
+Compression ratio: 1.0212506973677538
+Encoding speed: 26.919µs
+Decoding speed: 23.988µs
+
+Compression level: -43
+Compression ratio: 0.9995532390171258
+Encoding speed: 27.352µs
+Decoding speed: 21.001µs
+
+Compression level: -42
+Compression ratio: 1.022858884486437
+Encoding speed: 27.636µs
+Decoding speed: 24.068µs
+
+Compression level: -41
+Compression ratio: 1.032721304749205
+Encoding speed: 28.832µs
+Decoding speed: 39.2µs
+
+Compression level: -40
+Compression ratio: 1.0607385555497024
+Encoding speed: 33.617µs
+Decoding speed: 26.693µs
+
+Compression level: -39
+Compression ratio: 1.0265089722675367
+Encoding speed: 29.452µs
+Decoding speed: 24.822µs
+
+Compression level: -38
+Compression ratio: 0.9995532390171258
+Encoding speed: 25.651µs
+Decoding speed: 21.995µs
+
+Compression level: -37
+Compression ratio: 0.9995532390171258
+Encoding speed: 26.841µs
+Decoding speed: 22.2µs
+
+Compression level: -36
+Compression ratio: 1.0296057677557908
+Encoding speed: 29.385µs
+Decoding speed: 25.196µs
+
+Compression level: -35
+Compression ratio: 0.9995532390171258
+Encoding speed: 28.637µs
+Decoding speed: 21.864µs
+
+Compression level: -34
+Compression ratio: 1.0235868239121595
+Encoding speed: 29.089µs
+Decoding speed: 24.986µs
+
+Compression level: -33
+Compression ratio: 1.0494605722624695
+Encoding speed: 33.127µs
+Decoding speed: 26.018µs
+
+Compression level: -32
+Compression ratio: 1.0880207489058193
+Encoding speed: 37.538µs
+Decoding speed: 27.743µs
+
+Compression level: -31
+Compression ratio: 1.049569976544175
+Encoding speed: 34.103µs
+Decoding speed: 26.546µs
+
+Compression level: -30
+Compression ratio: 0.9995532390171258
+Encoding speed: 29.048µs
+Decoding speed: 21.574µs
+
+Compression level: -29
+Compression ratio: 1.0273469387755103
+Encoding speed: 30.312µs
+Decoding speed: 24.966µs
+
+Compression level: -28
+Compression ratio: 1.0401363706803037
+Encoding speed: 31.939µs
+Decoding speed: 26.18µs
+
+Compression level: -27
+Compression ratio: 1.0218726211621416
+Encoding speed: 30.442µs
+Decoding speed: 24.977µs
+
+Compression level: -26
+Compression ratio: 1.0318745516039767
+Encoding speed: 34.524µs
+Decoding speed: 56.278µs
+
+Compression level: -25
+Compression ratio: 1.1002677449319709
+Encoding speed: 44.503µs
+Decoding speed: 54.245µs
+
+Compression level: -24
+Compression ratio: 1.12996632996633
+Encoding speed: 46.264µs
+Decoding speed: 34.628µs
+
+Compression level: -23
+Compression ratio: 1.0836293186955117
+Encoding speed: 42.961µs
+Decoding speed: 30.561µs
+
+Compression level: -22
+Compression ratio: 1.0259859370223174
+Encoding speed: 35.667µs
+Decoding speed: 26.588µs
+
+Compression level: -21
+Compression ratio: 1.0372965176179683
+Encoding speed: 36.413µs
+Decoding speed: 27.382µs
+
+Compression level: -20
+Compression ratio: 1.0740918546967515
+Encoding speed: 41.23µs
+Decoding speed: 168.898µs
+
+Compression level: -19
+Compression ratio: 1.0330391955674123
+Encoding speed: 46.769µs
+Decoding speed: 30.469µs
+
+Compression level: -18
+Compression ratio: 1.0993066550199269
+Encoding speed: 54.242µs
+Decoding speed: 30.36µs
+
+Compression level: -17
+Compression ratio: 1.1581732428390659
+Encoding speed: 54.053µs
+Decoding speed: 33.134µs
+
+Compression level: -16
+Compression ratio: 1.2353374233128835
+Encoding speed: 176.137µs
+Decoding speed: 35.624µs
+
+Compression level: -15
+Compression ratio: 1.1591066083352521
+Encoding speed: 53.664µs
+Decoding speed: 33.946µs
+
+Compression level: -14
+Compression ratio: 1.0442900114096048
+Encoding speed: 41.649µs
+Decoding speed: 28.666µs
+
+Compression level: -13
+Compression ratio: 1.0815920932481067
+Encoding speed: 44.64µs
+Decoding speed: 29.961µs
+
+Compression level: -12
+Compression ratio: 1.1485284052019165
+Encoding speed: 52.865µs
+Decoding speed: 31.769µs
+
+Compression level: -11
+Compression ratio: 1.0796782841823056
+Encoding speed: 49.252µs
+Decoding speed: 29.662µs
+
+Compression level: -10
+Compression ratio: 1.182661811347351
+Encoding speed: 59.672µs
+Decoding speed: 32.453µs
+
+Compression level: -9
+Compression ratio: 1.324388318863457
+Encoding speed: 71.54µs
+Decoding speed: 35.507µs
+
+Compression level: -8
+Compression ratio: 1.4376695701842068
+Encoding speed: 77.667µs
+Decoding speed: 174.856µs
+
+Compression level: -7
+Compression ratio: 1.3974599208827816
+Encoding speed: 73.693µs
+Decoding speed: 37.641µs
+
+Compression level: -6
+Compression ratio: 1.1388496125784742
+Encoding speed: 62.198µs
+Decoding speed: 30.897µs
+
+Compression level: -5
+Compression ratio: 1.2671323390598452
+Encoding speed: 70.803µs
+Decoding speed: 34.112µs
+
+Compression level: -4
+Compression ratio: 1.4591304347826086
+Encoding speed: 81.656µs
+Decoding speed: 35.583µs
+
+Compression level: -3
+Compression ratio: 1.3907037778852132
+Encoding speed: 84.857µs
+Decoding speed: 36.291µs
+
+Compression level: -2
+Compression ratio: 1.7480684087160343
+Encoding speed: 105.803µs
+Decoding speed: 39.471µs
+
+Compression level: -1
+Compression ratio: 2.0948813982521846
+Encoding speed: 116.845µs
+Decoding speed: 42.943µs
+
+Compression level: 0
+Compression ratio: 2.173105978847399
+Encoding speed: 529.831µs
+Decoding speed: 65.691µs
+
+Compression level: 1
+Compression ratio: 1.7983388407609182
+Encoding speed: 185.084µs
+Decoding speed: 47.959µs
+
+Compression level: 2
+Compression ratio: 2.1806367771280053
+Encoding speed: 119.377µs
+Decoding speed: 57.82µs
+
+Compression level: 3
+Compression ratio: 2.173105978847399
+Encoding speed: 182.801µs
+Decoding speed: 52.266µs
+
+Compression level: 4
+Compression ratio: 2.173575129533679
+Encoding speed: 1.038256ms
+Decoding speed: 55.753µs
+
+Compression level: 5
+Compression ratio: 2.225710180170222
+Encoding speed: 1.640162ms
+Decoding speed: 57.55µs
+
+Compression level: 6
+Compression ratio: 2.225956223745302
+Encoding speed: 705.478µs
+Decoding speed: 56.972µs
+
+Compression level: 7
+Compression ratio: 2.2383281458425968
+Encoding speed: 3.302949ms
+Decoding speed: 57.873µs
+
+Compression level: 8
+Compression ratio: 2.2383281458425968
+Encoding speed: 1.188147ms
+Decoding speed: 57.759µs
+
+Compression level: 9
+Compression ratio: 2.2383281458425968
+Encoding speed: 6.001562ms
+Decoding speed: 58.248µs
+
+Compression level: 10
+Compression ratio: 2.2503352704514974
+Encoding speed: 12.541181ms
+Decoding speed: 63.848µs
+
+Compression level: 11
+Compression ratio: 2.2531050688150387
+Encoding speed: 3.97225ms
+Decoding speed: 77.604µs
+
+Compression level: 12
+Compression ratio: 2.2531050688150387
+Encoding speed: 24.069311ms
+Decoding speed: 64.664µs
+
+Compression level: 13
+Compression ratio: 2.2311357340720224
+Encoding speed: 4.972863ms
+Decoding speed: 58.355µs
+
+Compression level: 14
+Compression ratio: 2.2311357340720224
+Encoding speed: 6.77803ms
+Decoding speed: 63.561µs
+
+Compression level: 15
+Compression ratio: 2.2311357340720224
+Encoding speed: 32.50174ms
+Decoding speed: 65.495µs
+
+Compression level: 16
+Compression ratio: 2.244565823208115
+Encoding speed: 6.337836ms
+Decoding speed: 63.873µs
+
+Compression level: 17
+Compression ratio: 2.2579053599461765
+Encoding speed: 9.406805ms
+Decoding speed: 281.758µs
+
+Compression level: 18
+Compression ratio: 2.267056969151092
+Encoding speed: 9.826449ms
+Decoding speed: 236.816µs
+
+Compression level: 19
+Compression ratio: 2.2791171477079795
+Encoding speed: 44.642305ms
+Decoding speed: 259.104µs
+
+Compression level: 20
+Compression ratio: 2.2791171477079795
+Encoding speed: 83.175099ms
+Decoding speed: 1.326324ms
+
+Compression level: 21
+Compression ratio: 2.2791171477079795
+Encoding speed: 160.537803ms
+Decoding speed: 2.426887ms
+
+Compression level: 22
+Compression ratio: 2.2791171477079795
+Encoding speed: 319.042054ms
+Decoding speed: 148.499µs
+

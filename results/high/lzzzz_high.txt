@@ -1,0 +1,12 @@
+Compression ratio: 1.6555126202417167
+Encoding speed: 60.517µs
+Decoding speed: 31.515µs
+
+Compression ratio: 1.7467036780013878
+Encoding speed: 465.889µs
+Decoding speed: 22.02µs
+
+Compression ratio: 1.653473476761373
+Encoding speed: 64.89µs
+Decoding speed: 37.086µs
+

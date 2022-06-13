@@ -6,8 +6,17 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+data = { path = "../../core/data" }
 bytebuffer = "0.2.1"
 byteorder = "1.4.3"
+floatpack = "0.1.0"
+fpzip-sys = "0.1.5"
+lzzzz = "1.0.3"
 q_compress = "0.9.3"
+rust_decimal = "1.24.0"
+rust_decimal_macros = "1.24.0"
+snap = "1.0.5"
 tsz = "0.1.0"
+zfp-sys = "0.1.10"
 zstd = "0.11.2"
+bit_streamer = "0.1.0"

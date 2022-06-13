@@ -1,0 +1,6 @@
+Average Compression ratio: 1.8035445596993234
+Average Encoding speed: 136.495µs
+Average Decoding speed: 63.082µs
+Total Encoding speed: 262.752378ms
+Total Decoding speed: 121.433553ms
+
