@@ -342,7 +342,7 @@ fn test_tsz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
         let decoding_speed: Duration = timer.elapsed() - encoding_speed;
 
         // record compression ratio
-        let compression_ratio = (datapoints.len() as f64 * 16.0) / (compressed_num_bytes as f64);
+        let compression_ratio = (datapoints.len() as f64 * 8.0) / (compressed_num_bytes as f64);
         total_encoding_time = total_encoding_time.add(encoding_speed);
         total_decoding_time = total_decoding_time.add(decoding_speed);
         total_compression_ratio += compression_ratio;
