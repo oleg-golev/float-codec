@@ -12,9 +12,9 @@ use tsz::decode::Error as TszError;
 use tsz::stream::{BufferedReader, BufferedWriter};
 use tsz::{DataPoint, Decode, Encode, StdDecoder, StdEncoder};
 
-const SET: &str = "high";
-const DATA: &str = "high.txt";
-const PATH: &str = "./data/high.txt";
+const SET: &str = "floats";
+const DATA: &str = "floats.txt";
+const PATH: &str = "./data/floats.txt";
 
 const PAGE_BYTES: u32 = 65535;
 
@@ -40,17 +40,17 @@ fn main() -> io::Result<()> {
     // TEST DIFFERENT CODEC METHODS HERE //
     // --------------------------------- //
 
-    // // q_compress
-    // // https://crates.io/crates/q_compress
-    // // https://github.com/mwlon/quantile-compression
-    // test_q_compress(&vec, num_floats, num_bytes);
-    // println!("q_compress test done");
+    // q_compress
+    // https://crates.io/crates/q_compress
+    // https://github.com/mwlon/quantile-compression
+    test_q_compress(&vec, num_floats, num_bytes);
+    println!("q_compress test done");
 
-    // // zstd
-    // // https://docs.rs/zstd/latest/zstd/
-    // // https://github.com/gyscos/zstd-rs
-    // test_zstd(&vec, num_floats, num_bytes);
-    // println!("zstd test done");
+    // zstd
+    // https://docs.rs/zstd/latest/zstd/
+    // https://github.com/gyscos/zstd-rs
+    test_zstd(&vec, num_floats, num_bytes);
+    println!("zstd test done");
 
     // tsz
     // https://docs.rs/tsz/latest/tsz/
@@ -58,36 +58,27 @@ fn main() -> io::Result<()> {
     test_tsz(&vec, num_floats, num_bytes);
     println!("tsz test done");
 
-    // // snap
-    // // https://lib.rs/crates/snap
-    // test_snap(&vec, num_floats, num_bytes);
-    // println!("snap test done");
+    // snap
+    // https://lib.rs/crates/snap
+    test_snap(&vec, num_floats, num_bytes);
+    println!("snap test done");
 
     // // zfp
     // // https://crates.io/crates/zfp-sys
     // test_zfp(&mut vec, num_floats, num_bytes);
     // println!("zfp test done");
 
-    // // // fpzip
-    // // // https://crates.io/crates/fpzip-sys
-    // // test_fpzip(&mut vec, num_floats, num_bytes);
-    // // println!("fpzip test done");
-
-    // // floatpacks
-    // test_floatpack(&mut vec, num_floats, num_bytes);
-    // println!("floatpack test done");
-
-    // // lz4
-    // test_lzzzz(&mut vec, num_floats, num_bytes);
-    // println!("lzzzz test done");
+    // lz4
+    test_lzzzz(&mut vec, num_floats, num_bytes);
+    println!("lzzzz test done");
 
     // // gorilla
-    // test_gorilla(&mut vec, num_bytes);
-    test_gorilla2(&mut vec, num_bytes);
+    // test_gorilla(&mut vec, num_bytes);tes
+    test_gorilla(&mut vec, num_bytes);
 
-    // // baseline
-    // test_baseline(&mut vec, num_floats, num_bytes);
-    // println!("baseline test done");
+    // baseline
+    test_baseline(&mut vec, num_floats, num_bytes);
+    println!("baseline test done");
 
     Ok(())
 }
@@ -205,8 +196,8 @@ fn test_zstd(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
 
     // # define MINCLEVEL  -99
     // # define MAXCLEVEL   22
-    let mut compression_level = -99;
-    while compression_level <= 20 {
+    let mut compression_level = -10;
+    while compression_level <= 10 {
         // 22 is max it takes too long
         // stuff that gets updated on each chunk of data
         let mut total_encoding_time: Duration = Duration::ZERO;
@@ -519,16 +510,6 @@ fn test_snap(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
 //         // Encoding speed: 292.536271ms
 //         // Decoding speed: 282.665824ms
 //         unsafe { zfp_sys::zfp_stream_set_reversible(zfp) };
-
-//         // #[cfg(feature = "cuda")]
-//         // {
-//         //     let ret = unsafe { zfp_stream_set_execution(zfp, zfp_exec_policy_zfp_exec_cuda) };
-
-//         //     if ret == 0 {
-//         //         println!("failed to set the execution policy to zfp_exec_cuda");
-//         //         assert!(false);
-//         //     }
-//         // }
 
 //         /* allocate buffer for compressed data */
 //         let bufsize = unsafe { zfp_sys::zfp_stream_maximum_size(zfp, field) };
@@ -852,13 +833,16 @@ fn test_baseline(vec: &[f64], og_num_floats: usize, og_num_bytes: usize) {
     }
 
     // decode
+    // let mut counter = 0;
     for page in pages {
         timer = Instant::now();
         page.try_fold(0_f64, |acc, _obs| if true { Ok(acc) } else { Err(acc) })
             .unwrap();
+        // counter += 1;
         let decoding_speed: Duration = timer.elapsed();
         total_decoding_time = total_decoding_time.add(decoding_speed);
     }
+    // println!("{:?}", counter);
 
     // write results to file
     let results = format!(
@@ -879,172 +863,9 @@ fn test_baseline(vec: &[f64], og_num_floats: usize, og_num_bytes: usize) {
     println!("baseline compression done");
 }
 
-// fn test_floatpack(vec: &[f64], og_num_floats: usize, og_num_bytes: usize) {
-//     let hello = dec!(1.0);
-//     let dec_data_f32: Vec<f32> = vec.iter().map(|&x| dec!(2.2)).collect();
-// }
-
-/*
-// 1.17 compression ratio
-fn test_fpzip(vec: &mut [f64], og_num_floats: usize, og_num_bytes: usize) {
-    /* allocate buffer for compressed data */
-    let bufsize = 1024 + vec.len() * std::mem::size_of::<f64>();
-    let mut buffer: Vec<u8> = vec![0; bufsize];
-
-    // initialize the timer
-    let timer = Instant::now();
-
-    /* compress to memory */
-    let fpz = unsafe {
-        fpzip_sys::fpzip_write_to_buffer(
-            buffer.as_mut_ptr() as *mut std::ffi::c_void,
-            bufsize as u64,
-        )
-    };
-
-    unsafe {
-        (*fpz).type_ = fpzip_sys::FPZIP_TYPE_DOUBLE as i32;
-        (*fpz).prec = 0; // full precision
-        (*fpz).nx = vec.len() as i32;
-        (*fpz).ny = 1;
-        (*fpz).nz = 1;
-        (*fpz).nf = 1;
-    }
-
-    let stat = unsafe { fpzip_sys::fpzip_write_header(fpz) };
-
-    if stat == 0 {
-        unsafe { fpzip_sys::fpzip_write_close(fpz) };
-        panic!("cannot write header");
-    };
-
-    let outbytes = unsafe { fpzip_sys::fpzip_write(fpz, vec.as_ptr() as *const std::ffi::c_void) };
-
-    unsafe { fpzip_sys::fpzip_write_close(fpz) };
-
-    if outbytes == 0 {
-        panic!("cannot compress");
-    };
-
-    // record encoding speed
-    let encoding_speed: Duration = timer.elapsed();
-
-    println!(
-        "[fpzip::compress] {} reduced to {} bytes.",
-        vec.len() * std::mem::size_of::<f64>(),
-        outbytes,
-    );
-
-    /* decompress array */
-    let decompessed_data: Vec<f64> = vec![0_f64; 1024 + og_num_bytes / 8];
-    let compressed_num_bytes =
-        unsafe { fpzip_sys::fpzip_read(fpz, decompessed_data.as_ptr() as *mut std::ffi::c_void) };
-    let decompressed_bytes = decompessed_data.len();
-    assert!(decompressed_bytes == og_num_bytes);
-
-    // record decoding speed
-    let decoding_speed: Duration = timer.elapsed() - encoding_speed;
-
-    // write results to file
-    let results = format!(
-        "Compression ratio: {}\n\
-            Encoding speed: {:?}\n\
-            Decoding speed: {:?}\n\n",
-        (og_num_bytes as f64) / (compressed_num_bytes as f64),
-        encoding_speed,
-        decoding_speed,
-    );
-    let results_path = "results/fpzip";
-    let results_file = File::create(results_path).unwrap();
-    let mut results_file = BufWriter::new(results_file);
-    write!(results_file, "{}", results).expect("write to fpzip results file failed");
-    println!("fpzip compression level done");
-
-    println!("Ensuring by-num equality of original and decompressed versions:");
-    let mut i = 0;
-    while i < og_num_floats {
-        // println!("decompressed {} vs original {}", vec[i], vec_clone[i]);
-        assert!(decompessed_data[i] == vec[i]);
-        i += 1;
-    }
-}
-*/
-
-use std::error::Error;
-
-fn test_gorilla(vec: &[f64], og_num_bytes: usize) {
-    // // results file
-    // let results_path = format!("results/{}/gorilla_{}", SET, DATA);
-    // let results_file = File::create(results_path).unwrap();
-    // let mut results_file = BufWriter::new(results_file);
-
-    // // stuff that gets updated on each chunk of data
-    // let mut total_encoding_time: Duration = Duration::ZERO;
-    // let mut total_decoding_time: Duration = Duration::ZERO;
-    // let mut total_compression_ratio = 0.0;
-    // let mut head = vec_total;
-    // let mut done = false;
-    // let mut chunks = 0;
-
-    // // loop that benchmarks the algorithm on each chunk of data
-    // while !done {
-    //     let vec: &[f64];
-    //     if (PAGE_BYTES / 8) as usize > head.len() {
-    //         vec = head;
-    //         done = true;
-    //     } else {
-    //         (vec, head) = head.split_at((PAGE_BYTES / 8) as usize);
-    //     }
-    // // ------------------------------------
-
-    // // ------------------------------------
-
-    // let mut dst = Vec::new();
-    // encode(vec, &mut dst).unwrap();
-    // let num_compressed_bytes = dst.len();
-
-    // // ------------------------------------
-
-    // // ------------------------------------
-
-    // let mut decoded: Vec<f64> = Vec::new();
-    // decode(&dst, &mut decoded).unwrap();
-
-    // // ------------------------------------
-
-    // // ------------------------------------
-
-    // // record compression ratio
-    // let compression_ratio = ((vec.len() * 8) as f64) / (num_compressed_bytes as f64);
-
-    let timer = Instant::now();
-    let mut dst = vec![];
-    let src = vec;
-    encode(&src, &mut dst).expect("failed to encode");
-    let encoding_speed: Duration = timer.elapsed();
-
-    let mut got = vec![];
-    decode(&dst, &mut got).expect("failed to decode");
-    let decoding_speed: Duration = timer.elapsed() - encoding_speed;
-    // verify got same values back
-    assert_eq!(got, src);
-
-    let compression_ratio = ((got.len() * 8) as f64) / (dst.len() as f64);
-
-    println!(
-        "{:?}\n{:?}\n{:?}",
-        encoding_speed, decoding_speed, compression_ratio
-    );
-
-    // total_encoding_time = total_encoding_time.add(encoding_speed);
-    // total_decoding_time = total_decoding_time.add(decoding_speed);
-    // total_compression_ratio += compression_ratio;
-    // chunks += 1;
-}
-
-fn test_gorilla2(vec_total: &[f64], og_num_bytes: usize) {
+fn test_gorilla(vec_total: &[f64], og_num_bytes: usize) {
     // results file
-    let results_path = format!("results/{}/gorilla2_{}", SET, DATA);
+    let results_path = format!("results/{}/gorilla_{}", SET, DATA);
     let results_file = File::create(results_path).unwrap();
     let mut results_file = BufWriter::new(results_file);
 
@@ -1110,516 +931,6 @@ fn test_gorilla2(vec_total: &[f64], og_num_bytes: usize) {
     );
     write!(results_file, "{}", results).expect("write to gorilla2 results file failed");
     println!("gorilla2 compression done");
-}
-
-// note: encode/decode adapted from influxdb_iox
-// https://github.com/influxdata/influxdb_iox/tree/main/influxdb_tsm/src/encoders
-
-// SENTINEL is used to terminate a float-encoded block. A sentinel marker value
-// is useful because blocks do not always end aligned to bytes, and spare empty
-// bits can otherwise have undesirable semantic meaning.
-const SENTINEL: u64 = 0x7ff8_0000_0000_00ff; // in the quiet NaN range.
-const SENTINEL_INFLUXDB: u64 = 0x7ff8_0000_0000_0001; // legacy NaN value used by InfluxDB
-
-fn is_sentinel_f64(v: f64, sentinel: u64) -> bool {
-    v.to_bits() == sentinel
-}
-fn is_sentinel_u64(v: u64, sentinel: u64) -> bool {
-    v == sentinel
-}
-
-/// encode encodes a vector of floats into dst.
-///
-/// The encoding used is equivalent to the encoding of floats in the Gorilla
-/// paper. Each subsequent value is compared to the previous and the XOR of the
-/// two is determined. Leading and trailing zero bits are then analysed and
-/// representations based on those are stored.
-#[allow(clippy::many_single_char_names)]
-pub fn encode(src: &[f64], dst: &mut Vec<u8>) -> Result<(), Box<dyn Error>> {
-    dst.clear(); // reset buffer.
-    if src.is_empty() {
-        return Ok(());
-    }
-    if dst.capacity() < 9 {
-        dst.reserve_exact(9 - dst.capacity()); // room for encoding type, block
-                                               // size and a value
-    }
-
-    // write encoding type
-    let mut n = 8; // N.B, this is the number of bits written
-    dst.push((1 << 4) as u8); // write compression type
-
-    // write the first value into the block
-    let first = src[0];
-    let mut prev = first.to_bits();
-    dst.extend_from_slice(&prev.to_be_bytes());
-    n += 64;
-
-    let (mut prev_leading, mut prev_trailing) = (!0u64, 0u64);
-    // encode remaining values
-    for i in 1..=src.len() {
-        let x;
-        if i < src.len() {
-            x = src[i];
-            if is_sentinel_f64(x, SENTINEL) {
-                return Err(From::from("unsupported value"));
-            }
-        } else {
-            x = f64::from_bits(SENTINEL);
-        }
-
-        let cur = x.to_bits();
-        let v_delta = cur ^ prev;
-        if v_delta == 0 {
-            n += 1; // write a single zero bit, nothing else to do
-            prev = cur;
-            continue;
-        }
-
-        while n >> 3 >= dst.len() {
-            dst.push(0); // make room
-        }
-
-        // set the current bit of the current byte to indicate we are writing a
-        // delta value to the output
-        // n&7 - current bit in current byte
-        // n>>3 - current byte
-        dst[n >> 3] |= 128 >> (n & 7); // set the current bit of the current byte
-        n += 1;
-
-        // next, write the delta to the output
-        let mut leading = v_delta.leading_zeros() as u64;
-        let trailing = v_delta.trailing_zeros() as u64;
-
-        // prevent overflow by restricting number of leading zeros to 31
-        leading &= 0b0001_1111;
-
-        // a minimum of two further bits will be required
-        if (n + 2) >> 3 >= dst.len() {
-            dst.push(0);
-        }
-
-        if prev_leading != !0u64 && leading >= prev_leading && trailing >= prev_trailing {
-            n += 1; // write leading bit
-
-            let l = 64 - prev_leading - prev_trailing; // none-zero bit count
-            while (n + 1) >> 3 >= dst.len() {
-                dst.push(0); // grow to accommodate bits.
-            }
-
-            // the full value
-            let v = (v_delta >> prev_trailing) << (64 - l); // l least significant bits of v
-            let m = (n & 7) as u64; // current bit in current byte
-            let mut written = 0u64;
-            if m > 0 {
-                // the current byte has not been completely filled
-                written = if l < 8 - m { l } else { 8 - m };
-                let mask = v >> 56; // move 8 MSB to 8 LSB
-                dst[n >> 3] |= (mask >> m) as u8;
-                n += written as usize;
-
-                if l - written == 0 {
-                    prev = cur;
-                    continue;
-                }
-            }
-
-            let vv = v << written; // move written bits out of the way
-            while (n >> 3) + 8 >= dst.len() {
-                dst.push(0);
-            }
-            // TODO(edd): maybe this can be optimised?
-            let k = n >> 3;
-            let vv_bytes = &vv.to_be_bytes();
-            dst[k..k + 8].clone_from_slice(&vv_bytes[0..(k + 8 - k)]);
-
-            n += (l - written) as usize;
-        } else {
-            prev_leading = leading;
-            prev_trailing = trailing;
-
-            // set a single bit to indicate a value will follow
-            dst[n >> 3] |= 128 >> (n & 7); // set the current bit on the current byte
-            n += 1;
-
-            // write 5 bits of leading
-            if (n + 5) >> 3 >= dst.len() {
-                dst.push(0);
-            }
-
-            // see if there is enough room left in current byte for the 5 bits.
-            let mut m = n & 7;
-            let mut l = 5usize;
-            let mut v = leading << 59; // 5 LSB of leading
-            let mut mask = v >> 56; // move 5 MSB to 8 LSB
-
-            if m <= 3 {
-                // 5 bits fit in current byte
-                dst[n >> 3] |= (mask >> m) as u8;
-                n += l as usize;
-            } else {
-                // not enough bits available in current byte
-                let written = 8 - m;
-                dst[n >> 3] |= (mask >> m) as u8; // some of mask will get lost
-                n += written;
-
-                // next the lost part of mask needs to be written into the next byte
-                mask = v << written; // move already written bits out the way
-                mask >>= 56;
-
-                m = n & 7; // new current bit
-                dst[n >> 3] |= (mask >> m) as u8;
-                n += l - written;
-            }
-
-            // Note that if leading == trailing == 0, then sig_bits == 64. But
-            // that value doesn't actually fit into the 6 bits we have. However,
-            // we never need to encode 0 significant bits, since that would put
-            // us in the other case (v_delta == 0). So instead we write out a 0
-            // and adjust it back to 64 on unpacking.
-            let sig_bits = 64 - leading - trailing;
-            if (n + 6) >> 3 >= dst.len() {
-                dst.push(0);
-            }
-
-            m = n & 7;
-            l = 6;
-            v = sig_bits << 58; // move 6 LSB of sig_bits to MSB
-            let mut mask = v >> 56; // move 6 MSB to 8 LSB
-            if m <= 2 {
-                dst[n >> 3] |= (mask >> m) as u8; // the 6 bits fit in the current byte
-                n += l;
-            } else {
-                let written = 8 - m;
-                dst[n >> 3] |= (mask >> m) as u8; // fill rest of current byte
-                n += written;
-
-                // next, write the lost part of mask into the next byte
-                mask = v << written;
-                mask >>= 56;
-
-                m = n & 7; // recompute current bit to write
-                dst[n >> 3] |= (mask >> m) as u8;
-                n += l - written;
-            }
-
-            // write final value
-            m = n & 7;
-            l = sig_bits as usize;
-            v = (v_delta >> trailing) << (64 - l); // move l LSB into MSB
-            while (n + l) >> 3 >= dst.len() {
-                dst.push(0);
-            }
-
-            let mut written = 0usize;
-            if m > 0 {
-                // current byte not full
-                written = if l < 8 - m { l } else { 8 - m };
-                mask = v >> 56; // move 8 MSB to 8 LSB
-                dst[n >> 3] |= (mask >> m) as u8;
-                n += written;
-
-                if l - written == 0 {
-                    prev = cur;
-                    continue;
-                }
-            }
-
-            // shift remaining bits and write out
-            let vv = v << written; // remove bits written in previous byte
-            while (n >> 3) + 8 >= dst.len() {
-                dst.push(0);
-            }
-
-            // TODO(edd): maybe this can be optimised?
-            let k = n >> 3;
-            let vv_bytes = &vv.to_be_bytes();
-            dst[k..k + 8].clone_from_slice(&vv_bytes[0..(k + 8 - k)]);
-            n += l - written;
-        }
-        prev = cur;
-    }
-
-    let mut length = n >> 3;
-    if n & 7 > 0 {
-        length += 1;
-    }
-    dst.truncate(length);
-    Ok(())
-}
-
-// BIT_MASK contains a lookup table where the index is the number of bits
-// and the value is a mask. The table is always read by ANDing the index
-// with 0x3f, such that if the index is 64, position 0 will be read, which
-// is a 0xffffffffffffffff, thus returning all bits.
-//
-// 00 = 0xffffffffffffffff
-// 01 = 0x0000000000000001
-// 02 = 0x0000000000000003
-// 03 = 0x0000000000000007
-// ...
-// 62 = 0x3fffffffffffffff
-// 63 = 0x7fffffffffffffff
-//
-// TODO(edd): figure out how to generate this.
-const BIT_MASK: [u64; 64] = [
-    0xffff_ffff_ffff_ffff,
-    0x0001,
-    0x0003,
-    0x0007,
-    0x000f,
-    0x001f,
-    0x003f,
-    0x007f,
-    0x00ff,
-    0x01ff,
-    0x03ff,
-    0x07ff,
-    0x0fff,
-    0x1fff,
-    0x3fff,
-    0x7fff,
-    0xffff,
-    0x0001_ffff,
-    0x0003_ffff,
-    0x0007_ffff,
-    0x000f_ffff,
-    0x001f_ffff,
-    0x003f_ffff,
-    0x007f_ffff,
-    0x00ff_ffff,
-    0x01ff_ffff,
-    0x03ff_ffff,
-    0x07ff_ffff,
-    0x0fff_ffff,
-    0x1fff_ffff,
-    0x3fff_ffff,
-    0x7fff_ffff,
-    0xffff_ffff,
-    0x0001_ffff_ffff,
-    0x0003_ffff_ffff,
-    0x0007_ffff_ffff,
-    0x000f_ffff_ffff,
-    0x001f_ffff_ffff,
-    0x003f_ffff_ffff,
-    0x007f_ffff_ffff,
-    0x00ff_ffff_ffff,
-    0x01ff_ffff_ffff,
-    0x03ff_ffff_ffff,
-    0x07ff_ffff_ffff,
-    0x0fff_ffff_ffff,
-    0x1fff_ffff_ffff,
-    0x3fff_ffff_ffff,
-    0x7fff_ffff_ffff,
-    0xffff_ffff_ffff,
-    0x0001_ffff_ffff_ffff,
-    0x0003_ffff_ffff_ffff,
-    0x0007_ffff_ffff_ffff,
-    0x000f_ffff_ffff_ffff,
-    0x001f_ffff_ffff_ffff,
-    0x003f_ffff_ffff_ffff,
-    0x007f_ffff_ffff_ffff,
-    0x00ff_ffff_ffff_ffff,
-    0x01ff_ffff_ffff_ffff,
-    0x03ff_ffff_ffff_ffff,
-    0x07ff_ffff_ffff_ffff,
-    0x0fff_ffff_ffff_ffff,
-    0x1fff_ffff_ffff_ffff,
-    0x3fff_ffff_ffff_ffff,
-    0x7fff_ffff_ffff_ffff,
-];
-
-/// decode decodes the provided slice of bytes into a vector of f64 values.
-pub fn decode(src: &[u8], dst: &mut Vec<f64>) -> Result<(), Box<dyn Error>> {
-    decode_with_sentinel(src, dst, SENTINEL)
-}
-
-/// decode_influxdb decodes the provided slice of bytes, which must have been
-/// encoded into a TSM file via InfluxDB's encoder.
-///
-/// TODO(edd): InfluxDB uses a different  sentinel value to terminate a block
-/// than we chose to use for the float decoder. As we settle on a story around
-/// compression of f64 blocks we may be able to clean this API and not have
-/// multiple methods.
-pub fn decode_influxdb(src: &[u8], dst: &mut Vec<f64>) -> Result<(), Box<dyn Error>> {
-    decode_with_sentinel(src, dst, SENTINEL_INFLUXDB)
-}
-
-/// decode decodes a slice of bytes into a vector of floats.
-#[allow(clippy::many_single_char_names)]
-#[allow(clippy::useless_let_if_seq)]
-fn decode_with_sentinel(
-    src: &[u8],
-    dst: &mut Vec<f64>,
-    sentinel: u64,
-) -> Result<(), Box<dyn Error>> {
-    if src.len() < 9 {
-        return Ok(());
-    }
-
-    let mut i = 1; // skip first byte as it's the encoding, which is always gorilla
-    let mut buf: [u8; 8] = [0; 8];
-
-    // the first decoded value
-    buf.copy_from_slice(&src[i..i + 8]);
-    let mut val = u64::from_be_bytes(buf);
-    i += 8;
-    dst.push(f64::from_bits(val));
-
-    // decode the rest of the values
-    let mut br_cached_val;
-    let mut br_valid_bits;
-
-    // Refill br_cached_value, reading up to 8 bytes from b, returning the new
-    // values for the cached value, the valid bits and the number of bytes read.
-    let mut refill_cache = |i: usize| -> Result<(u64, u8, usize), Box<dyn Error>> {
-        let remaining_bytes = src.len() - i;
-        if remaining_bytes >= 8 {
-            // read 8 bytes directly
-            buf.copy_from_slice(&src[i..i + 8]);
-            return Ok((u64::from_be_bytes(buf), 64, 8));
-        } else if remaining_bytes > 0 {
-            let mut br_cached_val = 0u64;
-            let br_valid_bits = (remaining_bytes * 8) as u8;
-            let mut n = 0;
-            for v in src.iter().skip(i) {
-                br_cached_val = (br_cached_val << 8) | *v as u64;
-                n += 1;
-            }
-            br_cached_val = br_cached_val.rotate_right(br_valid_bits as u32);
-            return Ok((br_cached_val, br_valid_bits, n));
-        }
-        Err(From::from("unexpected end of block"))
-    };
-
-    // TODO(edd): I found it got complicated quickly when trying to use Ref to
-    // mutate br_cached_val, br_valid_bits and I directly in the closure, so for
-    // now we will just mutate copies and re-assign...
-    match refill_cache(i) {
-        Ok(res) => {
-            br_cached_val = res.0;
-            br_valid_bits = res.1;
-            i += res.2;
-        }
-        Err(e) => return Err(e),
-    }
-
-    let mut trailing_n = 0u8;
-    let mut meaningful_n = 64u8;
-
-    loop {
-        if br_valid_bits == 0 {
-            match refill_cache(i) {
-                Ok(res) => {
-                    br_cached_val = res.0;
-                    br_valid_bits = res.1;
-                    i += res.2;
-                }
-                Err(e) => return Err(e),
-            }
-        }
-
-        // read control bit 0.
-        br_valid_bits -= 1;
-        br_cached_val = br_cached_val.rotate_left(1);
-        if br_cached_val & 1 == 0 {
-            dst.push(f64::from_bits(val));
-            continue;
-        }
-
-        if br_valid_bits == 0 {
-            match refill_cache(i) {
-                Ok(res) => {
-                    br_cached_val = res.0;
-                    br_valid_bits = res.1;
-                    i += res.2;
-                }
-                Err(e) => return Err(e),
-            }
-        }
-
-        // read control bit 1.
-        br_valid_bits -= 1;
-        br_cached_val = br_cached_val.rotate_left(1);
-        if br_cached_val & 1 > 0 {
-            // read 5 bits for leading zero count and 6 bits for the meaningful data count
-            let leading_trailing_bit_count = 11;
-            let mut lm_bits = 0u64; // leading + meaningful data counts
-            if br_valid_bits >= leading_trailing_bit_count {
-                // decode 5 bits leading + 6 bits meaningful for a total of 11 bits
-                br_valid_bits -= leading_trailing_bit_count;
-                br_cached_val = br_cached_val.rotate_left(leading_trailing_bit_count as u32);
-                lm_bits = br_cached_val;
-            } else {
-                let mut bits_01 = 11u8;
-                if br_valid_bits > 0 {
-                    bits_01 -= br_valid_bits;
-                    lm_bits = br_cached_val.rotate_left(11);
-                }
-
-                match refill_cache(i) {
-                    Ok(res) => {
-                        br_cached_val = res.0;
-                        br_valid_bits = res.1;
-                        i += res.2;
-                    }
-                    Err(e) => return Err(e),
-                }
-
-                br_cached_val = br_cached_val.rotate_left(bits_01 as u32);
-                br_valid_bits -= bits_01;
-                lm_bits &= !BIT_MASK[(bits_01 & 0x3f) as usize];
-                lm_bits |= br_cached_val & BIT_MASK[(bits_01 & 0x3f) as usize];
-            }
-
-            lm_bits &= 0x7ff;
-            let leading_n = (lm_bits >> 6) as u8 & 0x1f; // 5 bits leading
-            meaningful_n = (lm_bits & 0x3f) as u8; // 6 bits meaningful
-            if meaningful_n > 0 {
-                trailing_n = 64 - leading_n - meaningful_n;
-            } else {
-                // meaningful_n == 0 is a special case, such that all bits are meaningful
-                trailing_n = 0;
-                meaningful_n = 64;
-            }
-        }
-
-        let mut s_bits = 0u64; // significant bits
-        if br_valid_bits >= meaningful_n {
-            br_valid_bits -= meaningful_n;
-            br_cached_val = br_cached_val.rotate_left(meaningful_n as u32);
-            s_bits = br_cached_val;
-        } else {
-            let mut m_bits = meaningful_n;
-            if br_valid_bits > 0 {
-                m_bits -= br_valid_bits;
-                s_bits = br_cached_val.rotate_left(meaningful_n as u32);
-            }
-
-            match refill_cache(i) {
-                Ok(res) => {
-                    br_cached_val = res.0;
-                    br_valid_bits = res.1;
-                    i += res.2;
-                }
-                Err(e) => return Err(e),
-            }
-
-            br_cached_val = br_cached_val.rotate_left(m_bits as u32);
-            br_valid_bits = br_valid_bits.wrapping_sub(m_bits);
-            s_bits &= !BIT_MASK[(m_bits & 0x3f) as usize];
-            s_bits |= br_cached_val & BIT_MASK[(m_bits & 0x3f) as usize];
-        }
-        s_bits &= BIT_MASK[(meaningful_n & 0x3f) as usize];
-        val ^= s_bits << (trailing_n & 0x3f);
-
-        // check for sentinel value
-        if is_sentinel_u64(val, sentinel) {
-            break;
-        }
-        dst.push(f64::from_bits(val));
-    }
-    Ok(())
 }
 
 use bit_streamer::Writer;

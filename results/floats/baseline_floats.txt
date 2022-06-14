@@ -1,3 +1,6 @@
-Encoding speed: 137.170524ms
-Decoding speed: 11.813498ms
+ Average Encoding speed: 74.67µs
+Average Decoding speed: 15ns
+\
+        Total Encoding speed: 143.664379ms
+Total Decoding speed: 29.054µs
 

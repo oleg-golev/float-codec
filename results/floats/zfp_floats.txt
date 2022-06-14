@@ -1,4 +1,0 @@
-Compression ratio: 1.3530295911155852
-Encoding speed: 957.975844ms
-Decoding speed: 1.508019489s
-
