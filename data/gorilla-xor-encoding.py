@@ -5,6 +5,10 @@ import math
 import time
 import csv
 
+import h5py
+import numpy
+import bitshuffle.h5
+
 
 def is_float(value):
     try:
@@ -31,20 +35,45 @@ def extract_floats():
 
 
 def main():
-    floats = extract_floats()[int(65535/8):2*int(65535/8)]
-    num_floats = len(floats)
+    array = extract_floats()
+    num_floats = len(array)
+    print(h5py.__version__)  # >= '2.5.0'
 
-    start = time.time()
-    encoded = gc.ValuesEncoder.encode_all(floats)
-    enc_time = time.time()
-    print("encoding time:", enc_time - start)
+    f = h5py.File("compressed", "w")
 
-    print("went from", len(pickle.dumps(floats)), "to", len(pickle.dumps(encoded)),
-          ", ratio =", len(pickle.dumps(floats)) / len(pickle.dumps(encoded)))
-    decoded = gc.ValuesDecoder.decode_all(encoded)
-    dec_time = time.time()
+    # block_size = 0 let Bitshuffle choose its value
+    block_size = 0
+    dataset = f.create_dataset(
+        "data",
+        (num_floats),
+        compression=bitshuffle.h5.H5FILTER,
+        compression_opts=(block_size, bitshuffle.h5.H5_COMPRESS_LZ4),
+        dtype='float64',
+    )
 
-    print("decoding time:", dec_time - enc_time)
+    # start = time.time()
+    # # encoded = gc.ValuesEncoder.encode_all(floats)
+    # enc_time = time.time()
+    # print("encoding time:", enc_time - start)
+
+    # decoded = gc.ValuesDecoder.decode_all(encoded)
+    # dec_time = time.time()
+
+    # print("decoding time:", dec_time - enc_time)
+
+    dataset[:] = array
+
+    f.close()
+
+    file = open("compressed", "rb")
+    byte = file.read(1)
+    count = 0
+    while byte:
+        count += 1
+        byte = file.read(1)
+
+    print("went from", len(pickle.dumps(array)), "to", count,
+          ", ratio =", len(pickle.dumps(array)) / count)
 
 
 if __name__ == "__main__":

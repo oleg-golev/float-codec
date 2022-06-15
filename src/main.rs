@@ -5,12 +5,16 @@ use lzzzz::{lz4, lz4_hc, lz4f};
 use sisu_data::{Page, PageBuilder};
 use std::fs::File;
 use std::io::{self, prelude::*, BufReader, BufWriter, Write};
+use std::num;
 use std::ops::Add;
 use std::time::{Duration, Instant};
 use std::vec::Vec;
 use tsz::decode::Error as TszError;
 use tsz::stream::{BufferedReader, BufferedWriter};
+
 use tsz::{DataPoint, Decode, Encode, StdDecoder, StdEncoder};
+
+extern crate blosc;
 
 const SET: &str = "floats";
 const DATA: &str = "floats.txt";
@@ -29,62 +33,154 @@ fn main() -> io::Result<()> {
         let num: f64 = line.unwrap().parse().unwrap();
         vec.push(num);
     }
-    let num_floats = vec.len();
+    // let num_floats = vec.len();
 
-    // convert the data to bytes
-    let mut buf = vec![0_u8; vec.len() * 8];
-    LittleEndian::write_f64_into(&vec, &mut buf);
-    let num_bytes = buf.len();
+    // // convert the data to bytes
+    // let mut buf = vec![0_u8; vec.len() * 8];
+    // LittleEndian::write_f64_into(&vec, &mut buf);
+    // let num_bytes = buf.len();
 
-    // --------------------------------- //
-    // TEST DIFFERENT CODEC METHODS HERE //
-    // --------------------------------- //
+    // // // bitshuffle
+    // let dataset = hdf5::File::create("hello.h5")
+    //     .unwrap()
+    //     .as_dataset()
+    //     .unwrap().filters().;
 
-    // q_compress
-    // https://crates.io/crates/q_compress
-    // https://github.com/mwlon/quantile-compression
-    test_q_compress(&vec, num_floats, num_bytes);
-    println!("q_compress test done");
+    // let group = hdf5::Group::create_group(&self, name);
+    // let builder = hdf5::DatasetBuilder::new(buf);
 
-    // zstd
-    // https://docs.rs/zstd/latest/zstd/
-    // https://github.com/gyscos/zstd-rs
-    test_zstd(&vec, num_floats, num_bytes);
-    println!("zstd test done");
+    // // --------------------------------- //
+    // // TEST DIFFERENT CODEC METHODS HERE //
+    // // --------------------------------- //
 
-    // tsz
-    // https://docs.rs/tsz/latest/tsz/
-    // https://github.com/jeromefroe/tsz-rs
-    test_tsz(&vec, num_floats, num_bytes);
-    println!("tsz test done");
+    // // q_compress
+    // // https://crates.io/crates/q_compress
+    // // https://github.com/mwlon/quantile-compression
+    // test_q_compress(&vec);
+    // println!("q_compress test done");
 
-    // snap
-    // https://lib.rs/crates/snap
-    test_snap(&vec, num_floats, num_bytes);
-    println!("snap test done");
+    // // zstd
+    // // https://docs.rs/zstd/latest/zstd/
+    // // https://github.com/gyscos/zstd-rs
+    // test_zstd(&vec);
+    // println!("zstd test done");
 
-    // // zfp
-    // // https://crates.io/crates/zfp-sys
-    // test_zfp(&mut vec, num_floats, num_bytes);
-    // println!("zfp test done");
+    // // tsz
+    // // https://docs.rs/tsz/latest/tsz/
+    // // https://github.com/jeromefroe/tsz-rs
+    // test_tsz(&vec);
+    // println!("tsz test done");
+
+    // // snap
+    // // https://lib.rs/crates/snap
+    // test_snap(&vec);
+    // println!("snap test done");
+
+    // // // zfp
+    // // // https://crates.io/crates/zfp-sys
+    // // test_zfp(&mut vec, num_floats, num_bytes);
+    // // println!("zfp test done");
 
     // lz4
-    test_lzzzz(&mut vec, num_floats, num_bytes);
+    test_lzzzz_bytes(&vec);
     println!("lzzzz test done");
+    test_lzzzz(&vec);
 
     // // gorilla
-    // test_gorilla(&mut vec, num_bytes);tes
-    test_gorilla(&mut vec, num_bytes);
+    // test_gorilla(&vec);
 
-    // baseline
-    test_baseline(&mut vec, num_floats, num_bytes);
-    println!("baseline test done");
+    // // baseline
+    // test_baseline(&vec);
+    // println!("baseline test done");
+
+    // blosc
+    test_blosc(&vec);
+    println!("blosc test done");
 
     Ok(())
 }
 
+fn test_blosc(vec_total: &[f64]) {
+    // results file
+    let results_path = format!("results/{}/blosc_lz4_{}", SET, DATA);
+    let results_file = File::create(results_path).unwrap();
+    let mut results_file = BufWriter::new(results_file);
+
+    // stuff that gets updated on each chunk of data
+    let mut total_encoding_time: Duration = Duration::ZERO;
+    let mut total_decoding_time: Duration = Duration::ZERO;
+    let mut total_compression_ratio = 0.0;
+    let mut head = vec_total;
+    let mut done = false;
+    let mut chunks = 0;
+
+    // loop that benchmarks the algorithm on each chunk of data
+    while !done {
+        let vec: &[f64];
+        if (PAGE_BYTES / 8) as usize > head.len() {
+            vec = head;
+            done = true;
+        } else {
+            (vec, head) = head.split_at((PAGE_BYTES / 8) as usize);
+        }
+
+        // initialize the timer
+        let timer = Instant::now();
+
+        // let usize_from_typesize = |ts: num::NonZeroU8| usize::from(ts.get());
+        let ctx0 = blosc::Context::new().shuffle(blosc::ShuffleMode::Bit);
+        let ctx = ctx0.compressor(blosc::Compressor::LZ4).unwrap();
+        let buffer = ctx.compress(vec);
+
+        // let compressed: Vec<u8> = blosc::Context::new()
+        //     // .shuffle(blosc::ShuffleMode::Bit)
+        //     .compressor(blosc::Compressor::LZ4HC)
+        //     .unwrap()
+        //     .compress(vec)
+        //     .into();
+
+        // record encoding speed
+        let encoding_speed: Duration = timer.elapsed();
+
+        // decompression
+        let decompressed: Vec<f64> = unsafe {
+            // Sadly, decompressing with Blosc is unsafe until
+            // https://github.com/Blosc/c-blosc/issues/229 gets fixed
+            blosc::decompress(&buffer)
+        }
+        .unwrap();
+        assert_eq!(vec, decompressed);
+
+        // record decoding speed
+        let decoding_speed: Duration = timer.elapsed() - encoding_speed;
+
+        // record compression ratio
+        let compression_ratio = (vec.len() as f64) * 8.0 / (buffer.size() as f64);
+
+        total_encoding_time = total_encoding_time.add(encoding_speed);
+        total_decoding_time = total_decoding_time.add(decoding_speed);
+        total_compression_ratio += compression_ratio;
+        chunks += 1;
+    }
+
+    let results = format!(
+        "Average Compression ratio: {}\n\
+        Average Encoding speed: {:?}\n\
+        Average Decoding speed: {:?}\n\
+        Total Encoding speed: {:?}\n\
+        Total Decoding speed: {:?}\n\n",
+        total_compression_ratio / chunks as f64,
+        total_encoding_time.div_f64(chunks as f64),
+        total_decoding_time.div_f64(chunks as f64),
+        total_encoding_time,
+        total_decoding_time,
+    );
+    write!(results_file, "{}", results).expect("write to blosc results file failed");
+    println!("blosc compression done");
+}
+
 // either runs successfully and prints evaluation results or panics
-fn test_q_compress(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
+fn test_q_compress(vec_total: &[f64]) {
     let results_path = format!("results/{}/q_compress_{}", SET, DATA);
     let results_file = File::create(results_path).unwrap();
     let mut results_file = BufWriter::new(results_file);
@@ -163,7 +259,7 @@ fn test_q_compress(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize)
     }
 }
 
-fn test_zstd(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
+fn test_zstd(vec_total: &[f64]) {
     fn compress(data: &[f64], level: i32) -> Vec<u8> {
         // convert the data to bytes
         let mut buf = vec![0_u8; data.len() * 8];
@@ -266,7 +362,7 @@ fn test_zstd(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
     }
 }
 
-fn test_tsz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
+fn test_tsz(vec_total: &[f64]) {
     println!("tsz compression starting");
 
     // initialize the results file
@@ -365,7 +461,7 @@ fn test_tsz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
     println!("tsz compression done");
 }
 
-fn test_snap(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
+fn test_snap(vec_total: &[f64]) {
     fn compress(uncompressed: &[u8], compressed: &mut Vec<u8>) -> io::Result<()> {
         compressed.clear();
         let mut encoder = snap::write::FrameEncoder::new(compressed);
@@ -587,7 +683,7 @@ fn test_snap(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
 //     println!("zfp compression done");
 // }
 
-fn test_lzzzz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
+fn test_lzzzz(vec_total: &[f64]) {
     // results file
     let results_path = format!("results/{}/lzzzz_{}", SET, DATA);
     let results_file = File::create(results_path).unwrap();
@@ -613,7 +709,7 @@ fn test_lzzzz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
 
         // convert the data to bytes
         let mut vec_bytes = vec![0_u8; vec.len() * 8];
-        LittleEndian::write_f64_into(&vec, &mut vec_bytes);
+        LittleEndian::write_f64_into(vec, &mut vec_bytes);
         let num_bytes = vec_bytes.len();
 
         // initialize the timer
@@ -632,8 +728,6 @@ fn test_lzzzz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
         lz4::decompress(&comp_bytes, &mut decomp_bytes).unwrap();
         let mut decomp_floats = vec![0_f64; decomp_bytes.len() / 8];
         LittleEndian::read_f64_into(&decomp_bytes, &mut decomp_floats);
-        // assert!(decomp_floats.len() == og_num_floats);
-        // assert!(decomp_bytes.len() == og_num_bytes);
 
         // record decoding speed
         let decoding_speed: Duration = timer.elapsed() - encoding_speed;
@@ -686,7 +780,7 @@ fn test_lzzzz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
         }
 
         let mut vec_bytes = vec![0_u8; vec.len() * 8];
-        LittleEndian::write_f64_into(&vec, &mut vec_bytes);
+        LittleEndian::write_f64_into(vec, &mut vec_bytes);
 
         // LZ4_HC compression
         let mut comp_bytes = Vec::new();
@@ -742,9 +836,6 @@ fn test_lzzzz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
 
     // loop that benchmarks the algorithm on each chunk of data
     while !done {
-        // initialize the timer
-        let timer = Instant::now();
-
         let vec: &[f64];
         if (PAGE_BYTES / 8) as usize > head.len() {
             vec = head;
@@ -754,7 +845,7 @@ fn test_lzzzz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
         }
 
         let mut vec_bytes = vec![0_u8; vec.len() * 8];
-        LittleEndian::write_f64_into(&vec, &mut vec_bytes);
+        LittleEndian::write_f64_into(vec, &mut vec_bytes);
 
         // initialize the timer
         let timer = Instant::now();
@@ -803,7 +894,230 @@ fn test_lzzzz(vec_total: &[f64], og_num_floats: usize, og_num_bytes: usize) {
     println!("lzzzz compression LZ4F done");
 }
 
-fn test_baseline(vec: &[f64], og_num_floats: usize, og_num_bytes: usize) {
+fn test_lzzzz_bytes(vec_total: &[f64]) {
+    // results file
+    let results_path = format!("results/{}/lzzzz_bytes_{}", SET, DATA);
+    let results_file = File::create(results_path).unwrap();
+    let mut results_file = BufWriter::new(results_file);
+
+    // stuff that gets updated on each chunk of data
+    let mut total_encoding_time: Duration = Duration::ZERO;
+    let mut total_decoding_time: Duration = Duration::ZERO;
+    let mut total_compression_ratio = 0.0;
+    let mut head = vec_total;
+    let mut done = false;
+    let mut chunks = 0;
+
+    // loop that benchmarks the algorithm on each chunk of data
+    while !done {
+        let vec: &[f64];
+        if (PAGE_BYTES / 8) as usize > head.len() {
+            vec = head;
+            done = true;
+        } else {
+            (vec, head) = head.split_at((PAGE_BYTES / 8) as usize);
+        }
+
+        // initialize the timer
+        let timer = Instant::now();
+
+        let vec_bytes: Vec<u8> = blosc::Context::new()
+            .shuffle(blosc::ShuffleMode::Bit)
+            .compressor(blosc::Compressor::LZ4)
+            .unwrap()
+            // .clevel(blosc::Clevel::L1)
+            .compress(vec)
+            .into();
+
+        // LZ4 compression
+        let mut comp_bytes = Vec::new();
+        let num_compressed_bytes =
+            lz4::compress_to_vec(&vec_bytes, &mut comp_bytes, lz4::ACC_LEVEL_DEFAULT).unwrap();
+
+        // record encoding speed
+        let encoding_speed: Duration = timer.elapsed();
+
+        // LZ4/LZ4_HC decompression
+        let mut decomp_bytes = vec![0_u8; vec_bytes.len()];
+        lz4::decompress(&comp_bytes, &mut decomp_bytes).unwrap();
+        unsafe {
+            let decompressed: Vec<f64> = blosc::decompress_bytes(&decomp_bytes).unwrap();
+        }
+
+        // record decoding speed
+        let decoding_speed: Duration = timer.elapsed() - encoding_speed;
+
+        // record compression ratio
+        let compression_ratio = (vec.len() as f64) * 8.0 / (num_compressed_bytes as f64);
+
+        total_encoding_time = total_encoding_time.add(encoding_speed);
+        total_decoding_time = total_decoding_time.add(decoding_speed);
+        total_compression_ratio += compression_ratio;
+        chunks += 1;
+    }
+
+    let results = format!(
+        "Average Compression ratio: {}\n\
+        Average Encoding speed: {:?}\n\
+        Average Decoding speed: {:?}\n\
+        Total Encoding speed: {:?}\n\
+        Total Decoding speed: {:?}\n\n",
+        total_compression_ratio / chunks as f64,
+        total_encoding_time.div_f64(chunks as f64),
+        total_decoding_time.div_f64(chunks as f64),
+        total_encoding_time,
+        total_decoding_time,
+    );
+    write!(results_file, "{}", results).expect("write to lz4 results file failed");
+    println!("lz4 compression done");
+
+    // ================================================================================
+
+    // stuff that gets updated on each chunk of data
+    total_encoding_time = Duration::ZERO;
+    total_decoding_time = Duration::ZERO;
+    total_compression_ratio = 0.0;
+    head = vec_total;
+    done = false;
+    chunks = 0;
+
+    // loop that benchmarks the algorithm on each chunk of data
+    while !done {
+        // initialize the timer
+        let timer = Instant::now();
+
+        let vec: &[f64];
+        if (PAGE_BYTES / 8) as usize > head.len() {
+            vec = head;
+            done = true;
+        } else {
+            (vec, head) = head.split_at((PAGE_BYTES / 8) as usize);
+        }
+
+        let vec_bytes: Vec<u8> = blosc::Context::new()
+            .shuffle(blosc::ShuffleMode::Bit)
+            .compress(&vec)
+            .into();
+        let num_bytes = vec_bytes.len();
+
+        // LZ4_HC compression
+        let mut comp_bytes = Vec::new();
+        let num_compressed_bytes =
+            lz4_hc::compress_to_vec(&vec_bytes, &mut comp_bytes, lz4_hc::CLEVEL_DEFAULT).unwrap();
+
+        // record encoding speed
+        let encoding_speed: Duration = timer.elapsed();
+
+        // LZ4/LZ4_HC decompression
+        let mut decomp_bytes = vec![0_u8; vec_bytes.len() * 8];
+        lz4::decompress(&comp_bytes, &mut decomp_bytes).unwrap();
+        unsafe {
+            let decompressed: Vec<f64> = blosc::decompress_bytes(&decomp_bytes).unwrap();
+        }
+
+        // record decoding speed
+        let decoding_speed: Duration = timer.elapsed() - encoding_speed;
+
+        // record compression ratio
+        let compression_ratio = (vec.len() as f64) * 8.0 / (num_compressed_bytes as f64);
+
+        total_encoding_time = total_encoding_time.add(encoding_speed);
+        total_decoding_time = total_decoding_time.add(decoding_speed);
+        total_compression_ratio += compression_ratio;
+        chunks += 1;
+    }
+
+    // write results to file
+    let results = format!(
+        "Average Compression ratio: {}\n\
+        Average Encoding speed: {:?}\n\
+        Average Decoding speed: {:?}\n\
+        Total Encoding speed: {:?}\n\
+        Total Decoding speed: {:?}\n\n",
+        total_compression_ratio / chunks as f64,
+        total_encoding_time.div_f64(chunks as f64),
+        total_decoding_time.div_f64(chunks as f64),
+        total_encoding_time,
+        total_decoding_time,
+    );
+    write!(results_file, "{}", results).expect("write to lz4 results file failed");
+    println!("lzzzz compression LZ4_HZ done");
+
+    // ================================================================================
+
+    // stuff that gets updated on each chunk of data
+    total_encoding_time = Duration::ZERO;
+    total_decoding_time = Duration::ZERO;
+    total_compression_ratio = 0.0;
+    head = vec_total;
+    done = false;
+    chunks = 0;
+
+    // loop that benchmarks the algorithm on each chunk of data
+    while !done {
+        let vec: &[f64];
+        if (PAGE_BYTES / 8) as usize > head.len() {
+            vec = head;
+            done = true;
+        } else {
+            (vec, head) = head.split_at((PAGE_BYTES / 8) as usize);
+        }
+
+        let vec_bytes: Vec<u8> = blosc::Context::new()
+            .shuffle(blosc::ShuffleMode::Bit)
+            .compress(&vec)
+            .into();
+        let num_bytes = vec_bytes.len();
+
+        // initialize the timer
+        let timer = Instant::now();
+
+        // LZ4F compression
+        let prefs = lz4f::Preferences::default();
+        let mut comp_bytes = Vec::new();
+        let num_compressed_bytes =
+            lz4f::compress_to_vec(&vec_bytes, &mut comp_bytes, &prefs).unwrap();
+
+        // record encoding speed
+        let encoding_speed: Duration = timer.elapsed();
+
+        // LZ4F decompression
+        let mut decomp_bytes = Vec::new();
+        lz4f::decompress_to_vec(&comp_bytes, &mut decomp_bytes).unwrap();
+        unsafe {
+            let decompressed: Vec<f64> = blosc::decompress_bytes(&decomp_bytes).unwrap();
+        }
+
+        // record decoding speed
+        let decoding_speed: Duration = timer.elapsed() - encoding_speed;
+
+        // record compression ratio
+        let compression_ratio = (vec.len() as f64) * 8.0 / (num_compressed_bytes as f64);
+
+        total_encoding_time = total_encoding_time.add(encoding_speed);
+        total_decoding_time = total_decoding_time.add(decoding_speed);
+        total_compression_ratio += compression_ratio;
+        chunks += 1;
+    }
+
+    // write results to file
+    let results = format!(
+        " Average Compression ratio: {}\n\
+        Average Encoding speed: {:?}\n\
+        Average Decoding speed: {:?}\n\
+        Total Encoding speed: {:?}\n\
+        Total Decoding speed: {:?}\n\n",
+        total_compression_ratio / chunks as f64,
+        total_encoding_time.div_f64(chunks as f64),
+        total_decoding_time.div_f64(chunks as f64),
+        total_encoding_time,
+        total_decoding_time,
+    );
+    write!(results_file, "{}", results).expect("write to lz4 results file failed");
+    println!("lzzzz compression LZ4F done");
+}
+
+fn test_baseline(vec: &[f64]) {
     let mut total_encoding_time: Duration = Duration::ZERO;
     let mut total_decoding_time: Duration = Duration::ZERO;
     let mut chunks = 0;
@@ -863,7 +1177,7 @@ fn test_baseline(vec: &[f64], og_num_floats: usize, og_num_bytes: usize) {
     println!("baseline compression done");
 }
 
-fn test_gorilla(vec_total: &[f64], og_num_bytes: usize) {
+fn test_gorilla(vec_total: &[f64]) {
     // results file
     let results_path = format!("results/{}/gorilla_{}", SET, DATA);
     let results_file = File::create(results_path).unwrap();

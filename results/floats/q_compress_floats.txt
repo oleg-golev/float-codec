@@ -1,91 +1,91 @@
 Compression level: 0
 Average Compression ratio: 1.0082681930730184
-Average Encoding speed: 447.157µs
-Average Decoding speed: 173.24µs
-Total Encoding speed: 860.777625ms
-Total Decoding speed: 333.486513ms
+Average Encoding speed: 471.294µs
+Average Decoding speed: 184.186µs
+Total Encoding speed: 907.240871ms
+Total Decoding speed: 354.558695ms
 
 Compression level: 1
 Average Compression ratio: 1.0528073130738422
-Average Encoding speed: 480.139µs
-Average Decoding speed: 206.319µs
-Total Encoding speed: 924.266784ms
-Total Decoding speed: 397.163324ms
+Average Encoding speed: 484.015µs
+Average Decoding speed: 208.213µs
+Total Encoding speed: 931.728623ms
+Total Decoding speed: 400.809571ms
 
 Compression level: 2
 Average Compression ratio: 1.0962656670777056
-Average Encoding speed: 539.164µs
-Average Decoding speed: 220.935µs
-Total Encoding speed: 1.037890006s
-Total Decoding speed: 425.300029ms
+Average Encoding speed: 573.099µs
+Average Decoding speed: 235.687µs
+Total Encoding speed: 1.103215248s
+Total Decoding speed: 453.697299ms
 
 Compression level: 3
 Average Compression ratio: 1.1512812106375843
-Average Encoding speed: 606.272µs
-Average Decoding speed: 239.617µs
-Total Encoding speed: 1.167073768s
-Total Decoding speed: 461.262645ms
+Average Encoding speed: 652.145µs
+Average Decoding speed: 257.405µs
+Total Encoding speed: 1.255378461s
+Total Decoding speed: 495.504719ms
 
 Compression level: 4
 Average Compression ratio: 1.2034152969904846
-Average Encoding speed: 628.221µs
-Average Decoding speed: 242.026µs
-Total Encoding speed: 1.20932497s
-Total Decoding speed: 465.900972ms
+Average Encoding speed: 676.864µs
+Average Decoding speed: 260.46µs
+Total Encoding speed: 1.302963039s
+Total Decoding speed: 501.384604ms
 
 Compression level: 5
 Average Compression ratio: 1.2350647240525883
-Average Encoding speed: 696.63µs
-Average Decoding speed: 253.679µs
-Total Encoding speed: 1.341011997s
-Total Decoding speed: 488.331175ms
+Average Encoding speed: 735.595µs
+Average Decoding speed: 267.469µs
+Total Encoding speed: 1.416020474s
+Total Decoding speed: 514.877116ms
 
 Compression level: 6
 Average Compression ratio: 1.2608352464923165
-Average Encoding speed: 932.73µs
-Average Decoding speed: 279.365µs
-Total Encoding speed: 1.795505499s
-Total Decoding speed: 537.777841ms
+Average Encoding speed: 927.418µs
+Average Decoding speed: 277.055µs
+Total Encoding speed: 1.785280496s
+Total Decoding speed: 533.330581ms
 
 Compression level: 7
 Average Compression ratio: 1.3007443547148532
-Average Encoding speed: 1.133181ms
-Average Decoding speed: 286.91µs
-Total Encoding speed: 2.181374145s
-Total Decoding speed: 552.30087ms
+Average Encoding speed: 1.179336ms
+Average Decoding speed: 299.291µs
+Total Encoding speed: 2.270222398s
+Total Decoding speed: 576.135628ms
 
 Compression level: 8
 Average Compression ratio: 1.3415323961488397
-Average Encoding speed: 1.766178ms
-Average Decoding speed: 289.767µs
-Total Encoding speed: 3.399893135s
-Total Decoding speed: 557.800918ms
+Average Encoding speed: 1.783002ms
+Average Decoding speed: 303.421µs
+Total Encoding speed: 3.432277901s
+Total Decoding speed: 584.085342ms
 
 Compression level: 9
 Average Compression ratio: 1.3845376163572312
-Average Encoding speed: 4.171544ms
-Average Decoding speed: 331.595µs
-Total Encoding speed: 8.030222292s
-Total Decoding speed: 638.320191ms
+Average Encoding speed: 4.19692ms
+Average Decoding speed: 330.513µs
+Total Encoding speed: 8.079070882s
+Total Decoding speed: 636.237937ms
 
 Compression level: 10
 Average Compression ratio: 1.4211464164222178
-Average Encoding speed: 13.059913ms
-Average Decoding speed: 442.35µs
-Total Encoding speed: 25.140332105s
-Total Decoding speed: 851.523587ms
+Average Encoding speed: 14.919306ms
+Average Decoding speed: 493.217µs
+Total Encoding speed: 28.719664143s
+Total Decoding speed: 949.441982ms
 
 Compression level: 11
 Average Compression ratio: 1.4329870139183172
-Average Encoding speed: 44.842091ms
-Average Decoding speed: 560.347µs
-Total Encoding speed: 86.321025701s
-Total Decoding speed: 1.078668388s
+Average Encoding speed: 50.021413ms
+Average Decoding speed: 620.992µs
+Total Encoding speed: 96.291220203s
+Total Decoding speed: 1.195408955s
 
 Compression level: 12
 Average Compression ratio: 1.433489816084915
-Average Encoding speed: 162.251532ms
-Average Decoding speed: 578.984µs
-Total Encoding speed: 312.334199489s
-Total Decoding speed: 1.114545011s
+Average Encoding speed: 181.146726ms
+Average Decoding speed: 635.832µs
+Total Encoding speed: 348.707446672s
+Total Decoding speed: 1.223976334s
 
